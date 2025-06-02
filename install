@@ -1,0 +1,73 @@
+#!/bin/bash
+
+# while-menu-dialog: a menu driven system information program
+
+DIALOG_CANCEL=1
+DIALOG_ESC=255
+HEIGHT=0
+WIDTH=0
+
+display_result() {
+  dialog --title "$1" \
+    --no-collapse \
+    --msgbox "$result" 0 0
+}
+
+while true; do
+  exec 3>&1
+  selection=$(dialog \
+    --backtitle "Grub Theme Installer v1.0" \
+    --title "Menu" \
+    --clear \
+    --cancel-label "Exit" \
+    --menu "Please select:" $HEIGHT $WIDTH 4 \
+    "1" "Inspect" \
+    "2" "d77" \
+    "3" "Libretrend" \
+    "4" "Sony" \
+    "5" "Vaio" \
+    2>&1 1>&3)
+  exit_status=$?
+  exec 3>&-
+  case $exit_status in
+    $DIALOG_CANCEL)
+      clear
+      echo "Program terminated."
+      exit
+      ;;
+    $DIALOG_ESC)
+      clear
+      echo "Program aborted." >&2
+      exit 1
+      ;;
+  esac
+  case $selection in
+    1 )
+      vim install
+      ;;
+    2 )
+      cp -r d77 /boot/grub/themes/
+      sed '/[GRUB_THEME]/d' /etc/default/grub
+      echo "GRUB_THEME=/boot/grub/themes/d77/theme.txt" >> /etc/default/grub
+      grub-mkconfig -o /boot/grub/grub.cfg
+      ;;
+    3 )
+      cp -r Libretrend /boot/grub/themes/
+      sed '/[GRUB_THEME]/d' /etc/default/grub
+      echo "GRUB_THEME=/boot/grub/themes/Libretrend/theme.txt" >> /etc/default/grub
+      grub-mkconfig -o /boot/grub/grub.cfg
+      ;;
+    4 )
+      cp -r Sony /boot/grub/themes/
+      sed '/[GRUB_THEME]/d' /etc/default/grub
+      echo "GRUB_THEME=/boot/grub/themes/Sony/theme.txt" >> /etc/default/grub
+      grub-mkconfig -o /boot/grub/grub.cfg
+      ;;
+    5 )
+      cp -r Vaio /boot/grub/themes/
+      sed '/[GRUB_THEME]/d' /etc/default/grub
+      echo "GRUB_THEME=/boot/grub/themes/Vaio/theme.txt" >> /etc/default/grub
+      grub-mkconfig -o /boot/grub/grub.cfg
+      ;;
+  esac
+done
