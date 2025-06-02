@@ -8,7 +8,7 @@ Inside this repository you will find my Grub themes, created by myself.
 
 - dialog
 
-To install any of them you an run the script just like this:
+To install any of them you can run the script just like this:
 
 ```
 sudo ./install
